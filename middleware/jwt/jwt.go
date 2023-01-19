@@ -3,6 +3,7 @@ package jwt
 import (
 	"context"
 	"fmt"
+	"github.com/dgrijalva/jwt-go"
 	krserror "github.com/go-kratos/kratos/v2/errors"
 	"github.com/go-kratos/kratos/v2/log"
 	"github.com/go-kratos/kratos/v2/middleware"

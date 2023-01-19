@@ -7,7 +7,6 @@ import (
 )
 
 type CuttingLogConfig struct {
-	Enable     bool   `json:"enable" `                       //是否启用自定义日志配置
 	Filename   string `json:"file_name" json:"fileName"`     //路径
 	MaxSize    int    `json:"max_size" json:"maxSize"`       //日志的最大大小（M）
 	MaxBackups int    `json:"max_backups" json:"maxBackups"` //日志的最大保存数量
@@ -17,7 +16,7 @@ type CuttingLogConfig struct {
 }
 
 //CuttingLogWriter 切割日志
-func CuttingLogWriter(conf *CuttingLogConfig) zapcore.WriteSyncer {
+func (conf *CuttingLogConfig) CuttingLogWriter() zapcore.WriteSyncer {
 	lumberJackLogger := &lumberjack.Logger{
 		Filename:   fmt.Sprintf("%s", conf.Filename),
 		MaxSize:    conf.MaxSize,    //日志的最大大小（M）
