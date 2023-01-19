@@ -3,7 +3,9 @@ package logger
 import (
 	"fmt"
 	"github.com/natefinch/lumberjack"
+	"github.com/pkg/errors"
 	"go.uber.org/zap/zapcore"
+	"strings"
 )
 
 type CuttingLogConfig struct {
@@ -16,7 +18,12 @@ type CuttingLogConfig struct {
 }
 
 //CuttingLogWriter 切割日志
-func (conf *CuttingLogConfig) CuttingLogWriter() zapcore.WriteSyncer {
+func (conf *CuttingLogConfig) CuttingLogWriter() (zapcore.WriteSyncer, error) {
+
+	if conf.Filename == "" || strings.HasSuffix(conf.Filename, ".log") {
+		return nil, errors.Wrap(errors.New("Cutting Log FileName error"), "Cutting Log FileName error")
+	}
+
 	lumberJackLogger := &lumberjack.Logger{
 		Filename:   fmt.Sprintf("%s", conf.Filename),
 		MaxSize:    conf.MaxSize,    //日志的最大大小（M）
@@ -25,5 +32,5 @@ func (conf *CuttingLogConfig) CuttingLogWriter() zapcore.WriteSyncer {
 		Compress:   conf.Compress,   //是否执行压缩
 		LocalTime:  conf.LocalTime,  // 是否使用格式化时间辍
 	}
-	return zapcore.AddSync(lumberJackLogger)
+	return zapcore.AddSync(lumberJackLogger), nil
 }
