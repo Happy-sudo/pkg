@@ -1,4 +1,4 @@
-module pkg
+module github.com/Happy-sudo/pkg
 
 go 1.18
 
