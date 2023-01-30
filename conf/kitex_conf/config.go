@@ -1,4 +1,4 @@
-package kitex
+package kitex_conf
 
 // 客户端服务发现配置
 type ClientConnect struct {
