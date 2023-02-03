@@ -1,12 +1,12 @@
 package kitex_conf
 
-// 客户端服务发现配置
+// ClientConnect 客户端服务发现配置
 type ClientConnect struct {
 	HelloService string `json:"hello_service" json:"helloService"`
 	HelloClient  string `json:"Hello_client" json:"helloClient"`
 }
 
-// 日志配置
+// Logger 日志配置
 type Logger struct {
 	Enable     bool   `json:"enable" `                       //是否启用自定义日志配置
 	Filename   string `json:"file_name" json:"fileName"`     //路径
@@ -17,9 +17,10 @@ type Logger struct {
 	LocalTime  bool   `json:"local_time" json:"localTime"`   //是否使用格式化时间辍
 }
 
-//服务端配置
+// Server 服务端配置
 type Server struct {
-	Rpc        rpc        `json:"rpc"`                           //服务ip配置
+	Rpc        rpc        `json:"rpc"`                           // rpc服务配置
+	Http       http       `json:"http"`                          // http服务配置
 	Polaris    polaris    `json:"polaris"`                       //北极星注册中心配置
 	Jaeger     jaeger     `json:"jaeger"`                        //链路配置
 	Transport  transport  `json:"transport"`                     //多路复用配置
@@ -27,7 +28,7 @@ type Server struct {
 	StatsLevel statsLevel `json:"stats_level" json:"statsLevel"` //埋点策略&埋点粒度
 }
 
-//服务名称配置
+// Service 服务名称配置
 type Service struct {
 	NameSpace  string `json:"namespace"`                     //服务空间名称
 	ServerName string `json:"server_name" json:"serverName"` //服务名称
@@ -35,9 +36,16 @@ type Service struct {
 	Version    string `json:"version"`                       //版本信息
 }
 
-//服务地址端口配置
+// 服务地址端口配置
 type rpc struct {
 	Enable  bool   `json:"enable" `                 //是否启用rpc自定义配置
+	Address string `json:"address"`                 //地址
+	Network string `json:"net_work" json:"netWork"` //连接方式 (tcp udp)
+}
+
+// 服务地址端口配置
+type http struct {
+	Enable  bool   `json:"enable" `                 //是否启用http自定义配置
 	Address string `json:"address"`                 //地址
 	Network string `json:"net_work" json:"netWork"` //连接方式 (tcp udp)
 }
