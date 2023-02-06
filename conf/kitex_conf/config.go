@@ -23,17 +23,17 @@ type Server struct {
 
 // Service 服务名称配置
 type Service struct {
-	NameSpace  string `mapstructure:"namespace"`   //服务空间名称
-	ServerName string `mapstructure:"server_name"` //服务名称
-	ClientName string `mapstructure:"client_name"` //客户端名称
-	Version    string `mapstructure:"version"`     //版本信息
+	NameSpace  string `mapstructure:"namespace"`                             //服务空间名称
+	ServerName string `mapstructure:"server_name" mapstructure:"serverName"` //服务名称
+	ClientName string `mapstructure:"client_name" mapstructure:"clientName"` //客户端名称
+	Version    string `mapstructure:"version"`                               //版本信息
 }
 
 // 服务地址端口配置
 type rpc struct {
-	Enable  bool   `mapstructure:"enable" `  //是否启用rpc自定义配置
-	Address string `mapstructure:"address"`  //地址
-	Network string `mapstructure:"net_work"` //连接方式 (tcp udp)
+	Enable  bool   `mapstructure:"enable" `                         //是否启用rpc自定义配置
+	Address string `mapstructure:"address"`                         //地址
+	Network string `mapstructure:"net_work" mapstructure:"netWork"` //连接方式 (tcp udp)
 }
 
 // 注册中心配置
@@ -54,54 +54,54 @@ type transport struct {
 
 //限流器配置
 type limit struct {
-	Enable         bool `mapstructure:"enable"`          //是否启用多路复用
-	MaxConnections int  `mapstructure:"max_connections"` // 最大连接数
-	MaxQPS         int  `mapstructure:"max_qps"`         //最大qps
+	Enable         bool `mapstructure:"enable"`                                        //是否启用多路复用
+	MaxConnections int  `mapstructure:"max_connections" mapstructure:"maxConnections"` // 最大连接数
+	MaxQPS         int  `mapstructure:"max_qps" mapstructure:"maxQps"`                 //最大qps
 }
 
 // **********************************公共对象*******************************
 
 type statsLevel struct {
-	LevelDisabled bool `mapstructure:"level_disabled"`
-	LevelBase     bool `mapstructure:"level_base"`
-	LevelDetailed bool `mapstructure:"level_detailed"`
+	LevelDisabled bool `mapstructure:"level_disabled" mapstructure:"levelDisabled"`
+	LevelBase     bool `mapstructure:"level_base" mapstructure:"levelBase"`
+	LevelDetailed bool `mapstructure:"level_detailed" mapstructure:"levelDetailed"`
 }
 
 // **********************************客户端对象******************************
 //客户端配置
 type Client struct {
-	TimeoutControl timeOutControl `mapstructure:"timeout_control"` //超时控制
-	ConnectionType connectionType `mapstructure:"connection_type"` // 连接类型
-	FailureRetry   failureRetry   `mapstructure:"failure_retry"`   //请求重试
-	LoadBalancer   loadBalancer   `mapstructure:"load_balancer"`   //负载均衡
-	CBSuite        cbsuite        `mapstructure:"cbsuite"`         //熔断器
-	StatsLevel     statsLevel     `mapstructure:"stats_level"`     //埋点策略&埋点粒度
+	TimeoutControl timeOutControl `mapstructure:"timeout_control" mapstructure:"timeoutControl"` //超时控制
+	ConnectionType connectionType `mapstructure:"connection_type" mapstructure:"connectionType"` // 连接类型
+	FailureRetry   failureRetry   `mapstructure:"failure_retry" mapstructure:"failureRetry"`     //请求重试
+	LoadBalancer   loadBalancer   `mapstructure:"load_balancer" mapstructure:"loadBalancer"`     //负载均衡
+	CBSuite        cbsuite        `mapstructure:"cbsuite"`                                       //熔断器
+	StatsLevel     statsLevel     `mapstructure:"stats_level" mapstructure:"statsLevel"`         //埋点策略&埋点粒度
 }
 
 //超时控制
 type timeOutControl struct {
-	RpcTimeout     rpcTimeout     `mapstructure:"rpc_timeout"`
-	ConnectTimeOut connectTimeOut `mapstructure:"connect_time_out"`
+	RpcTimeout     rpcTimeout     `mapstructure:"rpc_timeout" mapstructure:"rpcTimeout"`
+	ConnectTimeOut connectTimeOut `mapstructure:"connect_time_out" mapstructure:"connectTimeOut"`
 }
 
 //连接类型（长链接 短链接）
 type connectionType struct {
-	ShortConnection shortConnection `mapstructure:"short_connection"` //短链接
-	LongConnection  longConnection  `mapstructure:"long_connection"`  //长链接
-	ClientTransport clientTransport `mapstructure:"transport"`        //客户端多路复用
+	ShortConnection shortConnection `mapstructure:"short_connection" mapstructure:"shortConnection"` //短链接
+	LongConnection  longConnection  `mapstructure:"long_connection" mapstructure:"longConnection"`   //长链接
+	ClientTransport clientTransport `mapstructure:"transport"`                                       //客户端多路复用
 
 }
 
 //rpc超时控制
 type rpcTimeout struct {
-	Enable  bool   `mapstructure:"enable"`   //是否启用rpc超时
-	Timeout string `mapstructure:"time_out"` //超时时间 （默认 1s 单位："ns", "us" (or "µs"), "ms", "s", "m", "h"）
+	Enable  bool   `mapstructure:"enable"`                          //是否启用rpc超时
+	Timeout string `mapstructure:"time_out" mapstructure:"timeOut"` //超时时间 （默认 1s 单位："ns", "us" (or "µs"), "ms", "s", "m", "h"）
 }
 
 //connect超时控制
 type connectTimeOut struct {
-	Enable  bool   `mapstructure:"enable"`   //是否启用rpc超时
-	TimeOut string `mapstructure:"time_out"` //连接超时 （默认：50ms）
+	Enable  bool   `mapstructure:"enable"`                          //是否启用rpc超时
+	TimeOut string `mapstructure:"time_out" mapstructure:"timeOut"` //连接超时 （默认：50ms）
 }
 
 //短链接
@@ -111,23 +111,23 @@ type shortConnection struct {
 
 //长链接
 type longConnection struct {
-	Enable            bool   `mapstructure:"enable"`               //是否启用长链接
-	MaxIdlePerAddress int    `mapstructure:"max_idle_per_address"` //最大空闲地址
-	MinIdlePerAddress int    `mapstructure:"min_idle_per_address"` //最小空闲地址
-	MaxIdleGlobal     int    `mapstructure:"max_idle_global"`      //最大空闲数
-	MaxIdleTimeOut    string `mapstructure:"max_idle_time_out"`    //最大空闲超时
+	Enable            bool   `mapstructure:"enable"`                                                //是否启用长链接
+	MaxIdlePerAddress int    `mapstructure:"max_idle_per_address" mapstructure:"maxIdlePerAddress"` //最大空闲地址
+	MinIdlePerAddress int    `mapstructure:"min_idle_per_address" mapstructure:"minIdlePerAddress"` //最小空闲地址
+	MaxIdleGlobal     int    `mapstructure:"max_idle_global" mapstructure:"maxIdleGlobal"`          //最大空闲数
+	MaxIdleTimeOut    string `mapstructure:"max_idle_time_out" mapstructure:"maxIdleTimeOut"`       //最大空闲超时
 }
 
 // 客户端多路复用
 type clientTransport struct {
-	Enable        bool `mapstructure:"enable"`         //是否启用多路复用
-	MuxConnection int  `mapstructure:"mux_connection"` //连接数
+	Enable        bool `mapstructure:"enable"`                                      //是否启用多路复用
+	MuxConnection int  `mapstructure:"mux_connection" mapstructure:"muxConnection"` //连接数
 }
 
 //重试机制
 type failureRetry struct {
-	Enable        bool `mapstructure:"enable"`          //是否启用请求重试机制
-	MaxRetryTimes int  `mapstructure:"max_retry_times"` //重试次数
+	Enable        bool `mapstructure:"enable"`                                       //是否启用请求重试机制
+	MaxRetryTimes int  `mapstructure:"max_retry_times" mapstructure:"maxRetryTimes"` //重试次数
 }
 
 //负载均衡
