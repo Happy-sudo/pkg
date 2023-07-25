@@ -1,0 +1,1 @@
+[2023-07-25 17:29:50]	[DEBUG]	[zap/logger.go:45]	github.com/hertz-contrib/logger/zap.(*Logger).Log	this is a debug log

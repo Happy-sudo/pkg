@@ -1,0 +1,1 @@
+[2023-07-25 17:28:44]	[INFO]	[zap/logger.go:88]	github.com/hertz-contrib/logger/zap.(*Logger).CtxLogf	extra log
