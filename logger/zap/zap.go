@@ -1,7 +1,6 @@
 package zap
 
 import (
-	"bytes"
 	rotatelogs "github.com/lestrrat-go/file-rotatelogs"
 	"go.uber.org/zap"
 	"go.uber.org/zap/zapcore"
@@ -78,13 +77,7 @@ func NewZapLogger(data *Zap) *Logger {
 				}),
 			},
 		}
-		//if data.ISConsole {
-		//	coreConfig = append(coreConfig, CoreConfig{
-		//		Enc: zapcore.NewConsoleEncoder(coreEncoderConfig()),
-		//		Ws:  zapcore.AddSync(os.Stdout),
-		//		Lvl: dynamicLevel,
-		//	})
-		//}
+
 		logger = NewLogger(WithCores(coreConfig...),
 			WithZapOptions(zap.AddCaller()), // 行号
 			//WithExtraKeys([]ExtraKey{"requestId"}),
@@ -130,22 +123,11 @@ func NewZapLogger(data *Zap) *Logger {
 				}),
 			},
 		}
-		//if data.ISConsole {
-		//	coreConfig = append(coreConfig, CoreConfig{
-		//		Enc: zapcore.NewConsoleEncoder(coreEncoderConfig()),
-		//		Ws:  zapcore.AddSync(os.Stdout),
-		//		Lvl: dynamicLevel,
-		//	})
-		//}
 		logger = NewLogger(WithCores(coreConfig...),
 			WithZapOptions(zap.AddCaller()), // 行号
 			//WithExtraKeys([]ExtraKey{"requestId"}),
 		)
 	}
-
-	buf := new(bytes.Buffer)
-	logger.SetOutput(buf)
-	defer logger.Sync()
 
 	return logger
 }
