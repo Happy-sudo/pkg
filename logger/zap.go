@@ -190,6 +190,7 @@ func StringDurationEncoder(d time.Duration, enc zapcore.PrimitiveArrayEncoder) {
 func ShortCallerEncoder(caller zapcore.EntryCaller, enc zapcore.PrimitiveArrayEncoder) {
 	enc.AppendString("[" + caller.TrimmedPath() + "]")
 }
+
 func coreEncoderConfig() zapcore.EncoderConfig {
 	return zapcore.EncoderConfig{
 		MessageKey:     "msg",
