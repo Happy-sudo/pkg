@@ -1,4 +1,4 @@
-package zap
+package klogzap
 
 import (
 	rotatelogs "github.com/lestrrat-go/file-rotatelogs"
@@ -130,7 +130,7 @@ func NewZapLogger(data *Zap) *Logger {
 	return logger
 }
 
-// encoderConfig copy from zap
+// encoderConfig copy from hlogzap
 func pkgEncoderConfig() zapcore.EncoderConfig {
 	cfg := coreEncoderConfig()
 	cfg.EncodeTime = ISO8601TimeEncoder

@@ -1,4 +1,4 @@
-package zap
+package klogzap
 
 import (
 	"os"
@@ -83,7 +83,7 @@ func WithCores(coreConfigs ...CoreConfig) Option {
 	})
 }
 
-// WithZapOptions add origin zap option
+// WithZapOptions add origin hlogzap option
 func WithZapOptions(opts ...zap.Option) Option {
 	return option(func(cfg *config) {
 		cfg.zapOpts = append(cfg.zapOpts, opts...)

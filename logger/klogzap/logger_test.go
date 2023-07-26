@@ -1,11 +1,11 @@
-package zap
+package klogzap
 
 import (
 	"bytes"
 	"context"
 	"encoding/json"
 	"fmt"
-	"github.com/cloudwego/hertz/pkg/common/hlog"
+	"github.com/cloudwego/kitex/pkg/klog"
 	"github.com/stretchr/testify/assert"
 	"go.uber.org/zap"
 	"go.uber.org/zap/zapcore"
@@ -14,7 +14,7 @@ import (
 	"testing"
 )
 
-// testEncoderConfig encoder config for testing, copy from zap
+// testEncoderConfig encoder config for testing, copy from klogzap
 func testEncoderConfig() zapcore.EncoderConfig {
 	return zapcore.EncoderConfig{
 		MessageKey:     "msg",
@@ -32,7 +32,7 @@ func testEncoderConfig() zapcore.EncoderConfig {
 	}
 }
 
-// humanEncoderConfig copy from zap
+// humanEncoderConfig copy from klogzap
 func humanEncoderConfig() zapcore.EncoderConfig {
 	cfg := testEncoderConfig()
 	cfg.EncodeTime = zapcore.ISO8601TimeEncoder
@@ -62,9 +62,9 @@ func TestLogger(t *testing.T) {
 	logger := NewLogger(WithZapOptions(zap.WithFatalHook(zapcore.WriteThenPanic)))
 	defer logger.Sync()
 
-	hlog.SetLogger(logger)
-	hlog.SetOutput(buf)
-	hlog.SetLevel(hlog.LevelDebug)
+	klog.SetLogger(logger)
+	klog.SetOutput(buf)
+	klog.SetLevel(klog.LevelDebug)
 
 	type logMap map[string]string
 
@@ -169,12 +169,12 @@ func TestLogLevel(t *testing.T) {
 	logger.Debug("this is a debug log")
 	assert.False(t, strings.Contains(buf.String(), "this is a debug log"))
 
-	logger.SetLevel(hlog.LevelDebug)
+	logger.SetLevel(klog.LevelDebug)
 
 	logger.Debugf("this is a debug log %s", "msg")
 	assert.True(t, strings.Contains(buf.String(), "this is a debug log"))
 
-	logger.SetLevel(hlog.LevelError)
+	logger.SetLevel(klog.LevelError)
 	logger.Infof("this is a debug log %s", "msg")
 	assert.False(t, strings.Contains(buf.String(), "this is a info log"))
 
@@ -226,19 +226,19 @@ func TestWithCoreLevel(t *testing.T) {
 
 // TestCoreOption test zapcore config option
 func TestCoreOption(t *testing.T) {
-	//loggera, _ := zap.NewProduction()
+	//loggera, _ := klogzap.NewProduction()
 	//defer loggera.Sync()
 	//loggera.Info("failed to fetch url",
 	//	// 强类型字段
-	//	zap.String("url", "http://example.com"),
-	//	zap.Int("attempt", 3),
-	//	zap.Duration("duration", time.Second),
+	//	klogzap.String("url", "http://example.com"),
+	//	klogzap.Int("attempt", 3),
+	//	klogzap.Duration("duration", time.Second),
 	//)
 	//loggera.With(
 	//	// 强类型字段
-	//	zap.String("url", "http://development.com"),
-	//	zap.Int("attempt", 4),
-	//	zap.Duration("duration", time.Second*5),
+	//	klogzap.String("url", "http://development.com"),
+	//	klogzap.Int("attempt", 4),
+	//	klogzap.Duration("duration", time.Second*5),
 	//).Info("[With] failed to fetch url")
 	//buf := new(bytes.Buffer)
 	logger := NewZapLogger(&Zap{
@@ -256,8 +256,8 @@ func TestCoreOption(t *testing.T) {
 	ctx := context.WithValue(context.Background(), ExtraKey("requestId"), "123")
 	//logger.Logger().Sugar().Info(123123)
 	defer logger.Sync()
-	hlog.SetLogger(logger)
-	hlog.CtxInfof(ctx, "123")
+	klog.SetLogger(logger)
+	klog.CtxInfof(ctx, "123")
 	//// test log level
 	//assert.False(t, strings.Contains(buf.String(), "this is a debug log"))
 	//
@@ -267,7 +267,7 @@ func TestCoreOption(t *testing.T) {
 	//// test console encoder result
 	//assert.True(t, strings.Contains(buf.String(), "\tERROR\t"))
 	//
-	//logger.SetLevel(hlog.LevelDebug)
+	//logger.SetLevel(klog.LevelDebug)
 	//logger.Debug("this is a debug log")
 	//assert.True(t, strings.Contains(buf.String(), "this is a debug log"))
 	//
@@ -283,7 +283,7 @@ func TestCoreOption(t *testing.T) {
 	//// test console encoder result
 	//assert.True(t, strings.Contains(buf.String(), "\tERROR\t"))
 	//
-	//logger.SetLevel(hlog.LevelDebug)
+	//logger.SetLevel(klog.LevelDebug)
 	//logger.Debug("this is a debug log")
 	//assert.True(t, strings.Contains(buf.String(), "this is a debug log"))
 }

@@ -1,4 +1,4 @@
-package zap
+package hlogzap
 
 import (
 	"testing"

@@ -1,4 +1,4 @@
-package zap
+package hlogzap
 
 // inArray check if a string in a slice
 func inArray(key ExtraKey, arr []ExtraKey) bool {

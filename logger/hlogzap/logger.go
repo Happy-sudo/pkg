@@ -1,4 +1,4 @@
-package zap
+package hlogzap
 
 import (
 	"context"
@@ -226,7 +226,7 @@ func (l *Logger) SetOutput(writer io.Writer) {
 	l.l = logger
 }
 
-// Logger is used to return an instance of *zap.Logger for custom fields, etc.
+// Logger is used to return an instance of *hlogzap.Logger for custom fields, etc.
 func (l *Logger) Logger() *zap.Logger {
 	return l.l
 }
