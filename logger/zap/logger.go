@@ -16,8 +16,7 @@ type Logger struct {
 }
 
 func NewLogger(opts ...Option) *Logger {
-	config := defaultConfig()
-
+	config := new(config)
 	// apply options
 	for _, opt := range opts {
 		opt.apply(config)
@@ -27,10 +26,10 @@ func NewLogger(opts ...Option) *Logger {
 	for _, coreConfig := range config.coreConfigs {
 		cores = append(cores, zapcore.NewCore(coreConfig.Enc, coreConfig.Ws, coreConfig.Lvl))
 	}
-
 	logger := zap.New(
 		zapcore.NewTee(cores[:]...),
-		config.zapOpts...)
+		config.zapOpts...,
+	)
 
 	return &Logger{
 		l:      logger,
@@ -39,7 +38,7 @@ func NewLogger(opts ...Option) *Logger {
 }
 
 func (l *Logger) Log(level hlog.Level, kvs ...interface{}) {
-	sugar := l.l.Sugar()
+	sugar := l.l.Sugar().With()
 	switch level {
 	case hlog.LevelTrace, hlog.LevelDebug:
 		sugar.Debug(kvs...)

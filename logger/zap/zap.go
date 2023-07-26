@@ -36,10 +36,9 @@ func NewZapLogger(data *Zap) *Logger {
 
 	var logger = new(Logger)
 	if !data.LoggerType {
-
 		var coreConfig = []CoreConfig{
 			{
-				Enc: zapcore.NewConsoleEncoder(coreEncoderConfig()),
+				Enc: zapcore.NewConsoleEncoder(pkgEncoderConfig()),
 				Ws:  zapcore.AddSync(os.Stdout),
 				Lvl: dynamicLevel,
 			},
@@ -77,15 +76,14 @@ func NewZapLogger(data *Zap) *Logger {
 				}),
 			},
 		}
-
 		logger = NewLogger(WithCores(coreConfig...),
-			WithZapOptions(zap.AddCaller()), // 行号
+			WithZapOptions(zap.AddCaller(), zap.AddCallerSkip(3)), // 行号
 			//WithExtraKeys([]ExtraKey{"requestId"}),
 		)
 	} else {
 		var coreConfig = []CoreConfig{
 			{
-				Enc: zapcore.NewConsoleEncoder(coreEncoderConfig()),
+				Enc: zapcore.NewConsoleEncoder(pkgEncoderConfig()),
 				Ws:  zapcore.AddSync(os.Stdout),
 				Lvl: dynamicLevel,
 			},
@@ -124,7 +122,7 @@ func NewZapLogger(data *Zap) *Logger {
 			},
 		}
 		logger = NewLogger(WithCores(coreConfig...),
-			WithZapOptions(zap.AddCaller()), // 行号
+			WithZapOptions(zap.AddCaller(), zap.AddCallerSkip(3)), // 行号
 			//WithExtraKeys([]ExtraKey{"requestId"}),
 		)
 	}
@@ -138,7 +136,13 @@ func pkgEncoderConfig() zapcore.EncoderConfig {
 	cfg.EncodeTime = ISO8601TimeEncoder
 	cfg.EncodeLevel = CapitalLevelEncoder
 	cfg.EncodeDuration = StringDurationEncoder
+	cfg.EncodeCaller = FullCallerEncoder
 	return cfg
+}
+
+func FullCallerEncoder(caller zapcore.EntryCaller, enc zapcore.PrimitiveArrayEncoder) {
+	// TODO: consider using a byte-oriented API to save an allocation.
+	enc.AppendString("[" + caller.String() + "]")
 }
 
 // ISO8601TimeEncoder 自定义时间格式
@@ -207,5 +211,6 @@ func getWriteSyncer(file string, day, cuttingTime int64) zapcore.WriteSyncer {
 	if err != nil {
 		log.Printf("failed to create rotatelogs: %s", err)
 	}
+	//zapcore.NewMultiWriteSyncer(zapcore.AddSync(os.Stdout), zapcore.AddSync(logf))
 	return zapcore.AddSync(logf)
 }

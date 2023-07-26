@@ -1,1 +1,0 @@
-[2023-07-25 17:28:44]	[ERROR]	[zap/logger.go:51]	github.com/hertz-contrib/logger/zap.(*Logger).Log	this is a warn log
