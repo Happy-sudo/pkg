@@ -2,13 +2,15 @@ package kitex_conf
 
 // Logger 日志配置
 type Logger struct {
-	Enable     bool   `yaml:"enable" `     //是否启用自定义日志配置
-	Filename   string `yaml:"file_name"`   //路径
-	MaxSize    int    `yaml:"max_size"`    //日志的最大大小（M）
-	MaxBackups int    `yaml:"max_backups"` //日志的最大保存数量
-	MaxAge     int    `yaml:"max_age"`     //日志文件存储最大天数
-	Compress   bool   `yaml:"compress"`    //是否执行压缩
-	LocalTime  bool   `yaml:"local_time"`  //是否使用格式化时间辍
+	Enable         bool   `yaml:"enable" ` //是否启用自定义日志配置
+	Directory      string `yaml:"directory"`
+	LoggerFileName string `yaml:"logger_file_name"`
+	DirectoryType  string `yaml:"directory_type"`
+	Suffix         string `yaml:"suffix"`
+	Day            int64  `yaml:"max_age"`
+	CuttingTime    int64  `yaml:"cutting_time"`
+	LoggerType     bool   `yaml:"logger_type"`
+	ISConsole      bool   `yaml:"is_console"`
 }
 
 // Server 服务端配置

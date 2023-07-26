@@ -255,9 +255,9 @@ func TestCoreOption(t *testing.T) {
 	})
 	ctx := context.WithValue(context.Background(), ExtraKey("requestId"), "123")
 	//logger.Logger().Sugar().Info(123123)
+	defer logger.Sync()
 	hlog.SetLogger(logger)
 	hlog.CtxInfof(ctx, "123")
-
 	//// test log level
 	//assert.False(t, strings.Contains(buf.String(), "this is a debug log"))
 	//
