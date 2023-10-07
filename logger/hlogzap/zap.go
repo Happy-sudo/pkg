@@ -38,7 +38,7 @@ func NewZapLogger(data *Zap) *Logger {
 	if !data.LoggerType {
 		var coreConfig = []CoreConfig{
 			{
-				Enc: zapcore.NewConsoleEncoder(pkgEncoderConfig()),
+				Enc: zapcore.NewJSONEncoder(pkgEncoderConfig()),
 				Ws:  zapcore.AddSync(os.Stdout),
 				Lvl: dynamicLevel,
 			},
@@ -78,7 +78,7 @@ func NewZapLogger(data *Zap) *Logger {
 		}
 		logger = NewLogger(WithCores(coreConfig...),
 			WithZapOptions(zap.AddCaller(), zap.AddCallerSkip(3)), // 行号
-			//WithExtraKeys([]ExtraKey{"requestId"}),
+			WithExtraKeys([]ExtraKey{"requestId"}),
 		)
 	} else {
 		var coreConfig = []CoreConfig{

@@ -250,10 +250,10 @@ func TestCoreOption(t *testing.T) {
 		Day:         180, // 最大保存天数（天）
 		CuttingTime: 1,   // 按照时间切割（分钟）
 
-		LoggerType: true, // 输出日志类型 Console/JSON
-		ISConsole:  true, // 是否输出到系统日志
+		LoggerType: false, // 输出日志类型 Console/JSON
+		ISConsole:  true,  // 是否输出到系统日志
 	})
-	ctx := context.WithValue(context.Background(), ExtraKey("requestId"), "123")
+	ctx := context.WithValue(context.Background(), ExtraKey("requestId"), "12311111")
 	//logger.Logger().Sugar().Info(123123)
 	defer logger.Sync()
 	hlog.SetLogger(logger)
