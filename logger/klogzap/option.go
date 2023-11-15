@@ -24,11 +24,16 @@ type CoreConfig struct {
 	Ws  zapcore.WriteSyncer
 	Lvl zapcore.LevelEnabler
 }
-
+type traceConfig struct {
+	recordStackTraceInSpan bool
+	errorSpanLevel         zapcore.Level
+}
 type config struct {
-	extraKeys   []ExtraKey
-	coreConfigs []CoreConfig
-	zapOpts     []zap.Option
+	extraKeys     []ExtraKey
+	coreConfigs   []CoreConfig
+	zapOpts       []zap.Option
+	traceConfig   *traceConfig
+	extraKeyAsStr bool
 }
 
 // defaultCoreConfig default zapcore config: json encoder, atomic level, stdout write syncer
@@ -52,6 +57,11 @@ func defaultConfig() *config {
 	return &config{
 		coreConfigs: []CoreConfig{*defaultCoreConfig()},
 		zapOpts:     []zap.Option{},
+		traceConfig: &traceConfig{
+			recordStackTraceInSpan: true,
+			errorSpanLevel:         zapcore.ErrorLevel,
+		},
+		extraKeyAsStr: false,
 	}
 }
 
@@ -59,6 +69,19 @@ func defaultConfig() *config {
 func WithCoreEnc(enc zapcore.Encoder) Option {
 	return option(func(cfg *config) {
 		cfg.coreConfigs[0].Enc = enc
+	})
+}
+
+func WithTraceErrorSpanLevel(level zapcore.Level) Option {
+	return option(func(cfg *config) {
+		cfg.traceConfig.errorSpanLevel = level
+	})
+}
+
+// WithRecordStackTraceInSpan record stack track option
+func WithRecordStackTraceInSpan(recordStackTraceInSpan bool) Option {
+	return option(func(cfg *config) {
+		cfg.traceConfig.recordStackTraceInSpan = recordStackTraceInSpan
 	})
 }
 

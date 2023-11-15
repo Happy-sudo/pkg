@@ -7,6 +7,7 @@ import (
 	"fmt"
 	"github.com/cloudwego/hertz/pkg/common/hlog"
 	"github.com/stretchr/testify/assert"
+	"go.opentelemetry.io/otel"
 	"go.uber.org/zap"
 	"go.uber.org/zap/zapcore"
 	"reflect"
@@ -347,4 +348,61 @@ func BenchmarkWithExtraKeys(b *testing.B) {
 	for i := 0; i < b.N; i++ {
 		log.CtxInfof(ctx, "normal log")
 	}
+}
+func TestLoggers(t *testing.T) {
+	ctx := context.Background()
+
+	buf := new(bytes.Buffer)
+
+	logger := NewZapLogger(&Zap{
+		Directory:      "./logs",               // 目录
+		LoggerFileName: "/system",              //文件名
+		DirectoryType:  "all,info,debug,error", //日志类型/等级
+		Suffix:         ".log",                 //后缀
+
+		Day:         180, // 最大保存天数（天）
+		CuttingTime: 1,   // 按照时间切割（分钟）
+
+		LoggerType: true, // 输出日志类型 Console/JSON
+		ISConsole:  true, // 是否输出到系统日志
+	})
+
+	hlog.SetLogger(logger)
+	hlog.SetOutput(buf)
+	hlog.SetLevel(hlog.LevelDebug)
+
+	logger.Info("log from origin zap")
+	assert.True(t, strings.Contains(buf.String(), "log from origin zap"))
+	buf.Reset()
+
+	tracer := otel.Tracer("test otel std logger")
+
+	ctx, span := tracer.Start(ctx, "root")
+
+	hlog.CtxInfof(ctx, "hello %s", "world")
+	assert.True(t, strings.Contains(buf.String(), "trace_id"))
+	assert.True(t, strings.Contains(buf.String(), "span_id"))
+	assert.True(t, strings.Contains(buf.String(), "trace_flags"))
+	buf.Reset()
+
+	span.End()
+
+	ctx, child := tracer.Start(ctx, "child")
+
+	hlog.CtxWarnf(ctx, "foo %s", "bar")
+
+	hlog.CtxTracef(ctx, "trace %s", "this is a trace log")
+	hlog.CtxDebugf(ctx, "debug %s", "this is a debug log")
+	hlog.CtxInfof(ctx, "info %s", "this is a info log")
+	hlog.CtxNoticef(ctx, "notice %s", "this is a notice log")
+	hlog.CtxWarnf(ctx, "warn %s", "this is a warn log")
+	hlog.CtxErrorf(ctx, "error %s", "this is a error log")
+
+	child.End()
+
+	_, errSpan := tracer.Start(ctx, "error")
+
+	hlog.Info("no trace context")
+
+	errSpan.End()
 }
